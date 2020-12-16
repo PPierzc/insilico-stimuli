@@ -85,15 +85,19 @@ class StimuliSet:
             images = [self.stimulus_from_idx(i) for i in range(batch_start, batch_end)]
             yield np.array(images)
 
-    def images(self):
+    def images(self, n_channels=1):
         """
         Generates the images for the desired stimuli.
+
+        Args:
+            n_channels (int): The number of channels that the image is supposed to be generated for.
 
         Returns: The images of all possible parameter combinations as numpy.ndarray with shape
         ('total number of parameter combinations', 'image height', 'image width')
         """
         num_stims = np.prod(self.num_params())
-        return np.array([self.stimulus_from_idx(i) for i in range(num_stims)])
+        images = np.array([self.stimulus_from_idx(i) for i in range(num_stims)])
+        return np.stack([images] * n_channels, axis=-1).squeeze()
 
 
 class BarsSet(StimuliSet):
