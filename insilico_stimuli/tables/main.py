@@ -89,6 +89,20 @@ class InsilicoStimuliSet(dj.Lookup):
 
         return StimulusSet.images()
 
+    def get_set(self, key: Key) -> np.ndarray:
+        """
+        Returns the stimuli images given the set config.
+        """
+        stimulus_fn, stimulus_config = (self & key).fetch1("stimulus_fn", "stimulus_config")
+        stimulus_fn = self.import_func(stimulus_fn)
+
+        stimulus_config = self.parse_stimulus_config(stimulus_config)
+
+        StimulusSet = stimulus_fn(**stimulus_config)
+
+        return StimulusSet
+
+
 @schema
 class ExperimentMethod(dj.Lookup):
     """Table that contains Stimuli sets and their configurations."""
@@ -136,7 +150,7 @@ class ExperimentMethod(dj.Lookup):
         """
 
         for key, value in method_config.items():
-            if not isinstance(value, dict):
+            if not isinstance(value, dict) or "config_dict" in key:
                 continue
 
             attr_fn = self.import_func(value['path'])

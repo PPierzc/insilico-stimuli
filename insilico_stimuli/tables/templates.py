@@ -155,6 +155,7 @@ class ExperimentTemplate(dj.Computed):
         self.insert1(key, ignore_extra_fields=True)
         self.Units.insert(experiment_entities, ignore_extra_fields=True)
 
+
 class ExperimentPerUnitTemplate(dj.Computed):
     trained_model_table = None
     unit_table = None
@@ -225,10 +226,10 @@ class ExperimentPerUnitTemplate(dj.Computed):
         seed = (self.seed_table & key).fetch1('seed')
 
         if self.previous_experiment_table:
-            prev_key = {prev_key.strip('prev_'): key[prev_key] for prev_key in self.prev_primary_keys}
+            prev_key = {prev_key: key["prev_" + prev_key] for prev_key in self.prev_primary_keys}
 
             previous_experiment = (
-                        (self.previous_experiment_table & prev_key).Units() & dict(data_key=key['data_key'])).fetch(as_dict=True)
+                        (self.previous_experiment_table & prev_key) & dict(data_key=key['data_key'])).fetch(as_dict=True)[0]
 
             output, score = method_fn(
                 stimulus_fn(**stimulus_config),

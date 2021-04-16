@@ -23,7 +23,7 @@ def gradient_descent_per_unit(StimulusSet, gabor_gen, model, unit, epochs, lr, f
     return stimuli_params, max_activation
 
 
-def gradient_descent(StimulusSet, model, key, unit=None, seed=None, fixed_norm=10, lr=5e-3, epochs=20000):
+def gradient_descent(StimulusSet, model, unit=None, seed=None, fixed_norm=10, lr=5e-3, epochs=20000):
     torch.manual_seed(seed)
 
     if unit is None:

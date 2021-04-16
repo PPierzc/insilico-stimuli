@@ -6,6 +6,7 @@ from insilico_stimuli.parameters import *
 
 from tqdm import tqdm
 
+
 def bruteforce(StimulusSet, model, batch_size=100, unit_idx=None):
     """
     Finds optimal parameter combination for all units based on brute force testing method.
@@ -40,7 +41,7 @@ def bruteforce(StimulusSet, model, batch_size=100, unit_idx=None):
         images_batch = batch.reshape((batch_size,) + tuple(StimulusSet.canvas_size))
         images_batch = np.expand_dims(images_batch, axis=1)
         images_batch = torch.tensor(images_batch).float()
-        activations_batch = model(images_batch).detach().numpy().squeeze()
+        activations_batch = model(images_batch.cuda()).cpu().detach().numpy().squeeze()
 
         # Initialize the activation vectors from the initial pass through the model
         if not argmax_activations or not max_activations:
